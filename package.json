@@ -1,0 +1,34 @@
+{
+  "name": "astoria",
+  "version": "0.0.1",
+  "description": "A 4chan thread and post monitor.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js",
+    "test": "mocha",
+    "lint": "eslint **/*.js --ignore-pattern node_modules"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/seqi/astoria.git"
+  },
+  "keywords": [
+    "4chan",
+    "board",
+    "thread",
+    "post",
+    "api",
+    "watcher",
+    "poller",
+    "listener"
+  ],
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/seqi/astoria/issues"
+  },
+  "homepage": "https://github.com/seqi/astoria#readme",
+  "devDependencies": {
+    "eslint": "^6.0.1"
+  }
+}
