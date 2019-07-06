@@ -2,9 +2,9 @@
   "name": "astoria",
   "version": "0.0.1",
   "description": "A 4chan thread and post monitor.",
-  "main": "index.js",
+  "main": "src/index.js",
   "scripts": {
-    "start": "node index.js",
+    "start": "node src/index.js",
     "test": "mocha",
     "lint": "eslint **/*.js --ignore-pattern node_modules"
   },
@@ -29,6 +29,7 @@
   },
   "homepage": "https://github.com/seqi/astoria#readme",
   "devDependencies": {
-    "eslint": "^6.0.1"
+    "eslint": "^6.0.1",
+    "mocha": "^6.1.4"
   }
 }

@@ -2,7 +2,8 @@
 	"env": {
 		"browser": true,
 		"es6": true,
-		"node": true
+		"node": true,
+		"mocha": true
 	},
 	"extends": ["eslint:recommended"],
 	"parserOptions": {
@@ -22,5 +23,5 @@
 		"comma-spacing": ["error", { "before": false, "after": true }],
 		"keyword-spacing": ["warn", { "before": true, "after": true }],
 		"newline-per-chained-call": ["error", { "ignoreChainWithDepth": 1 }]
-	}
+	},
 }
