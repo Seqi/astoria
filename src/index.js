@@ -15,12 +15,21 @@ class Astoria {
 			throw new Error('Cannot set interval to less than 10 seconds to abide by 4chan API rules.')
 		}
 
-		this.options = {
-			interval: 30,
-			...options
+		let defaultOptions = {
+			interval: 30
 		}
 
-		this.poller = new Poller(options.interval)
+		if (options) {
+			this.options = {
+				...defaultOptions,
+				...options
+			}
+		} 
+		else {
+			this.options = defaultOptions
+		}
+
+		this.poller = new Poller(this.options.interval)
 	}
 
 	/**
