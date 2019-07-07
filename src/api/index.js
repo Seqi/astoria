@@ -6,16 +6,11 @@ class ChanApi {
 		this.useHttps = useHttps
 	}
 
-	getModifiedSinceDate() {
-		let date = this.lastRequestDate || new Date(0)
-		return date.toUTCString()
-	}
-
 	fetch(board, thread) {
 		let url = urlBuilder(board, thread, this.useHttps)
 
 		let headers = {
-			'If-Modified-Since': this.getModifiedSinceDate()
+			'If-Modified-Since': (this.lastRequestDate || new Date(0)).toUTCString()
 		}
 		
 		return fetch(url, { headers })
