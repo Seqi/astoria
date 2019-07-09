@@ -14,7 +14,7 @@ describe('Board subscriber', () => {
 		}
 
 		// Inject the stub into the subscriber
-		let ProxyBoardSubscriber = proxyquire('../src/api/board-subscriber', {
+		let ProxyBoardSubscriber = proxyquire('../../src/api/board-subscriber', {
 			'./api': apiStub
 		})
 
@@ -22,7 +22,7 @@ describe('Board subscriber', () => {
 	})
 
 	it('should initialise with an empty set of ids', () => {
-		let BoardSubscriber = require('../src/api/board-subscriber')
+		let BoardSubscriber = require('../../src/api/board-subscriber')
 		let subscriber = new BoardSubscriber('ck')
 
 		assert(subscriber._ids && subscriber._ids.length === 0)

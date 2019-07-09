@@ -1,5 +1,5 @@
 let assert = require('assert')
-let urlBuilder = require('../src/api/url-builder')
+let urlBuilder = require('../../src/api/url-builder')
 
 describe('URL builder', () => {
 	it('should give base http url with no arguments', () => {

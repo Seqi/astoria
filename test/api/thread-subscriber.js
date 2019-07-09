@@ -14,7 +14,7 @@ describe('Thread subscriber', () => {
 		}
 
 		// Inject the stub into the subscriber
-		let ProxyThreadSubscriber = proxyquire('../src/api/thread-subscriber', {
+		let ProxyThreadSubscriber = proxyquire('../../src/api/thread-subscriber', {
 			'./api': apiStub
 		})
 
@@ -22,7 +22,7 @@ describe('Thread subscriber', () => {
 	})
 
 	it('should initialise with an empty set of ids', () => {
-		let ThreadSubscriber = require('../src/api/thread-subscriber')
+		let ThreadSubscriber = require('../../src/api/thread-subscriber')
 		let subscriber = new ThreadSubscriber('ck', 123)
 
 		assert(subscriber._ids && subscriber._ids.length === 0)

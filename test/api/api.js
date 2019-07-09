@@ -2,7 +2,7 @@ let assert = require('assert')
 let nock = require('nock')
 let sinon = require('sinon')
 let proxyquire = require('proxyquire')
-let ChanApi = require('../src/api/api')
+let ChanApi = require('../../src/api/api')
 
 describe('4chan api', () => {
 	let api
@@ -18,7 +18,7 @@ describe('4chan api', () => {
 
 	it('should use board and thread to call url builder', (done) => {
 		let fake = sinon.fake(() => url)		
-		let ProxyApi = proxyquire('../src/api/api', { './url-builder': fake })
+		let ProxyApi = proxyquire('../../src/api/api', { './url-builder': fake })
 
 		let proxyApi = new ProxyApi()
 		

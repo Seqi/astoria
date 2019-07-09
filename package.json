@@ -5,7 +5,7 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "test": "mocha",
+    "test": "mocha --recursive",
     "lint": "eslint **/*.js --ignore-pattern node_modules"
   },
   "repository": {
