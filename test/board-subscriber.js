@@ -23,7 +23,7 @@ describe('Board subscriber', () => {
 
 	it('should initialise with an empty set of ids', () => {
 		let BoardSubscriber = require('../src/api/board-subscriber')
-		let subscriber = new BoardSubscriber('ck', 1)
+		let subscriber = new BoardSubscriber('ck')
 
 		assert(subscriber._ids && subscriber._ids.length === 0)
 	})
