@@ -22,8 +22,8 @@ class Poller extends EventEmitter {
 	 */
 	onPoll(callback) {
 		this.on('poll', () => {
-			callback()
-			this.poll()
+			Promise.resolve(callback())
+				.then(() => this.poll())
 		})
 	}
 

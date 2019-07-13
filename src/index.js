@@ -1,4 +1,5 @@
 let Poller = require('./poller')
+let subscriber = require('./api/subscriber')
 
 /**
  * Astoria options
@@ -10,26 +11,15 @@ class Astoria {
 	/**
 	  * @param {options} options The configuration for Astoria
 	  */
-	constructor(options) {
-		if (options && options.interval < 10) {
-			throw new Error('Cannot set interval to less than 10 seconds to abide by 4chan API rules.')
-		}
-
+	constructor(options = {}) {
 		let defaultOptions = {
 			interval: 30
 		}
 
-		if (options) {
-			this.options = {
-				...defaultOptions,
-				...options
-			}
-		} 
-		else {
-			this.options = defaultOptions
+		this.options = {
+			...defaultOptions,
+			...options
 		}
-
-		this.poller = new Poller(this.options.interval)
 	}
 
 	/**
@@ -38,7 +28,7 @@ class Astoria {
 	 * @return {Astoria} Current instance of Astoria
 	 */
 	board(board) {
-		this.board = board
+		this._board = board
 		return this
 	}
 
@@ -48,7 +38,7 @@ class Astoria {
 	 * @return {Astoria} Current instance of Astoria
 	 */
 	thread(thread) {
-		this.thread = thread
+		this._thread = thread
 		return this
 	}
 
@@ -64,20 +54,44 @@ class Astoria {
 	 * @param {onNewItems} callback 
 	 */
 	listen(callback) {
-		this.poller.onPoll(() => {
-			callback(this)
-		})
+		if (!callback || typeof callback !== 'function') {
+			throw new Error('Callback must be a function')
+		}
 
-		this.poller.poll()
+		if (!this._board) {
+			throw new Error('A board must be specified')
+		}
 
-		return this
-	}
+		let currentSubscriber = subscriber.getSubscriber(this._board, this._thread)
+		let poller = new Poller(this.options.interval)
 
-	/**
-	 * Remove all listeners to this Astoria instance.
-	 */
-	stopListening() {
-		this.poller.cancel()
+		// Little hack if they cancel the listener before actually listening
+		let isCancelled = false
+
+		// Get initial set of data and send it back to the user if requested
+		currentSubscriber.next()
+			.then(data => callback(this, data))
+			.catch(err => callback(this, null, err))
+			// Then begin polling for new items
+			.then(() => {
+				if (isCancelled) {
+					return
+				}
+
+				poller.onPoll(() => {
+					return currentSubscriber.next()
+						.then(data => callback(this, data))
+						.catch(err => callback(this, null, err))
+				})
+
+				poller.poll()
+			})
+
+		// Give the caller a way of stopping the subscription
+		return () => {
+			isCancelled = true
+			poller.cancel()
+		}
 	}
 }
 
