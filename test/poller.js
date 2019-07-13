@@ -1,4 +1,5 @@
 let assert = require('assert')
+let sinon = require('sinon')
 let Poller = require ('../src/poller')
 
 describe('Poller', () => {
@@ -38,6 +39,38 @@ describe('Poller', () => {
 				done()
 			}
 		})
+
+		poller.on('error', assert.fail)
+
+		poller.poll()
+	})
+
+	it('should wait for callback code to finish before polling again', (done) => {
+		let interval = 0.02 
+		let poller = new Poller(interval)
+		let start = new Date()
+
+		let pollSpy = sinon.spy(poller, 'poll')
+		
+		poller.onPoll(() => new Promise((resolve) => {
+			setTimeout(() => {
+				// Wait for poll to be called three times
+				if (pollSpy.callCount === 3) {
+					// Stop the poll
+					poller.cancel()
+
+					// Interval between polls = 20ms
+					// Poll callback = 10ms
+					// Interval -> Callback -> Interval -> Callback -> Interval -> Callback
+					// (20 * 3) + (10 * 3)
+					// Whole round trip should take at least 90 ms
+					let end = new Date()
+					assert((end - start) > 90)
+					done()
+				}
+				resolve()
+			}, 10)
+		}))
 
 		poller.on('error', assert.fail)
 
