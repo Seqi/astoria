@@ -65,7 +65,7 @@ describe('Poller', () => {
 					// (20 * 3) + (10 * 3)
 					// Whole round trip should take at least 90 ms
 					let end = new Date()
-					assert((end - start) > 90)
+					assert((end - start) >= 90)
 					done()
 				}
 				resolve()
