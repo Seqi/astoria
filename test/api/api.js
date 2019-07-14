@@ -49,11 +49,7 @@ describe('4chan api', () => {
 			.catch(done)
 	})
 
-	it('should add updated If-Modified-Since header on second request', (done) => {		
-		// If-Modified-Since header doesnt use s/ms so remove these from our timer
-		let startDate = new Date()
-			.setSeconds(0, 0)
-
+	it('should add updated If-Modified-Since header on second request', (done) => {
 		// Req 1
 		nock(url)		
 			.get('/')
@@ -64,7 +60,7 @@ describe('4chan api', () => {
 			reqheaders: {
 				'If-Modified-Since': header => {
 					let date = new Date(header)
-					return date >= startDate
+					return date.getTime() > 0 
 				}
 			}
 		})		
@@ -86,10 +82,8 @@ describe('4chan api', () => {
 			.get('/')
 			.reply(200, {})
 
-		let currDate = new Date()
-
 		api.fetch()
-			.then(() => assert(api.lastRequestDate >= currDate))
+			.then(() => assert(api.lastRequestDate.getTime() > 0))
 			.then(() => done())
 			.catch(e => assert.fail(e))
 	})
@@ -99,10 +93,8 @@ describe('4chan api', () => {
 			.get('/')
 			.reply(304)
 
-		let currDate = new Date()
-
 		api.fetch()
-			.then(() => assert(api.lastRequestDate >= currDate))
+			.then(() => assert(api.lastRequestDate.getTime() > 0))
 			.then(() => done())
 			.catch(done)
 	})
@@ -112,10 +104,8 @@ describe('4chan api', () => {
 			.get('/')
 			.reply(404)
 
-		let currDate = new Date()
-
 		api.fetch()
-			.catch(() => assert(api.lastRequestDate >= currDate))
+			.catch(() => assert(api.lastRequestDate.getTime() > 0))
 			.then(() => done())
 	})
 
