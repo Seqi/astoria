@@ -24,7 +24,7 @@ class BoardSubscriber {
 				// Store new thread ids
 				this._ids = threads.map(thread => thread.no)	
 
-				return newThreads
+				return newThreads.length > 0 ? newThreads : undefined
 			})
 	}
 }

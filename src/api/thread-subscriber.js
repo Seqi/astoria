@@ -15,7 +15,7 @@ class ThreadSubscriber {
 					let newPosts = data.posts.filter(post => !this._ids.find(id => id === post.no))
 					this._ids = data.posts.map(post => post.no)
 		
-					return newPosts
+					return newPosts.length > 0 ? newPosts : undefined
 				}
 			})
 	}

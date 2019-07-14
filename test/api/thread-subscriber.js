@@ -109,6 +109,35 @@ describe('Thread subscriber', () => {
 			.catch(done)
 	})
 
+	it('should return undefined if threads were retrieved but nothing has changed', (done) => {
+		fetchStub.onFirstCall()
+			.returns(Promise.resolve({
+				posts: [
+					{ no: 1 },
+					{ no: 2 },
+					{ no: 3 }
+				]
+			}))
+
+		fetchStub.onSecondCall()
+			.returns(Promise.resolve({
+				posts: [
+					{ no: 1 },
+					{ no: 2 },
+					{ no: 3 }
+				]
+			}))
+
+		subscriber.next()
+			.then(() => subscriber.next())
+			.then((data) => {
+				// Check the data
+				assert(!data)
+			})
+			.then(() => done())
+			.catch(done)
+	})
+
 	it('updates ids and passes only new posts if a consecutive call returns new posts', (done) => {
 		fetchStub.onFirstCall()
 			.returns(Promise.resolve({
