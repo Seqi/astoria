@@ -13,7 +13,8 @@ class Astoria {
 	  */
 	constructor(options = {}) {
 		let defaultOptions = {
-			interval: 30
+			interval: 30,
+			updatesOnly: false
 		}
 
 		this.options = {
@@ -71,7 +72,7 @@ class Astoria {
 		// Get initial set of data and send it back to the user if requested
 		currentSubscriber.next()
 			.then(
-				data => callback(this, data), 
+				data => !this.options.updatesOnly && callback(this, data), 
 				err => callback(this, null, err)
 			)
 			// Then begin polling for new items

@@ -149,5 +149,37 @@ describe('Astoria client', () => {
 					}
 				})
 		})
+
+		it('should only listen to updates if updatesOnly option is set', (done) => {
+			nextStub.onFirstCall()
+				.resolves([
+					{ no: 1 }, 
+					{ no: 2 },
+					{ no: 3 },
+				])
+
+			nextStub.onSecondCall()
+				.resolves([{ no: 4 }])
+
+			nextStub.onThirdCall()
+				.resolves([{ no: 5 }])
+
+			let client = new Astoria({ interval: 0.01, updatesOnly: true })
+
+			let unsubscribe = client
+				.board('ck')
+				.listen((context, data, err) => {
+					unsubscribe()
+
+					if (err) {
+						done(err)
+					}
+
+					assert(data)
+					assert.equal(data.length, 1)
+					assert.equal(4, data[0].no)
+					done()
+				})
+		})
 	})
 })
