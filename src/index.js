@@ -70,8 +70,10 @@ class Astoria {
 
 		// Get initial set of data and send it back to the user if requested
 		currentSubscriber.next()
-			.then(data => callback(this, data))
-			.catch(err => callback(this, null, err))
+			.then(
+				data => callback(this, data), 
+				err => callback(this, null, err)
+			)
 			// Then begin polling for new items
 			.then(() => {
 				if (isCancelled) {
@@ -80,8 +82,10 @@ class Astoria {
 
 				poller.onPoll(() => {
 					return currentSubscriber.next()
-						.then(data => callback(this, data))
-						.catch(err => callback(this, null, err))
+						.then(
+							data => callback(this, data),
+							err => callback(this, null, err)
+						)
 				})
 
 				poller.poll()
