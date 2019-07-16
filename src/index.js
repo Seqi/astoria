@@ -14,7 +14,8 @@ class Astoria {
 	constructor(options = {}) {
 		let defaultOptions = {
 			interval: 30,
-			updatesOnly: false
+			updatesOnly: false,
+			unsubscribeOnNotFound: true
 		}
 
 		this.options = {
@@ -73,7 +74,14 @@ class Astoria {
 		currentSubscriber.next()
 			.then(
 				data => !this.options.updatesOnly && callback(this, data), 
-				err => callback(this, null, err)
+				err => {
+					if (err.message === 'not found' && this.options.unsubscribeOnNotFound) {
+						// Poller won't have polled yet so we can just set the flag
+						isCancelled = true
+					}
+
+					callback(this, null, err)
+				}
 			)
 			// Then begin polling for new items
 			.then(() => {
@@ -85,7 +93,14 @@ class Astoria {
 					return currentSubscriber.next()
 						.then(
 							data => callback(this, data),
-							err => callback(this, null, err)
+							err => {
+								if (err.message === 'not found' && this.options.unsubscribeOnNotFound) {
+									// Poller won't have polled yet so we can just set the flag
+									poller.cancel()
+								}
+			
+								callback(this, null, err)
+							}
 						)
 				})
 

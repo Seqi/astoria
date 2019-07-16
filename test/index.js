@@ -181,5 +181,119 @@ describe('Astoria client', () => {
 					done()
 				})
 		})
+
+		it('should not listen if the item is not found', (done) => {
+			nextStub.onFirstCall()
+				.rejects(new Error('not found'))
+
+			let client = new Astoria({ interval: 0.01 })
+
+			let spy = sinon.spy((context, data, err) => {
+				// Ensure the error message is not found
+				if (err.message !== 'not found') {
+					done(`Expected not found message, got ${err.message}`)
+				} 				
+			})
+
+			client
+				.board('ck')
+				.listen(spy)
+
+			// Wait for a period of 3 'ticks' and ensure only one was called
+			setTimeout(() => {
+				assert.equal(spy.callCount, 1)
+				done()
+			}, 50)				
+		})
+
+		it('should keep listening if the item is not found and option is set to keep listening', (done) => {
+			nextStub.onFirstCall()
+				.rejects(new Error('not found'))
+
+			nextStub.onSecondCall()
+				.resolves(1)
+
+			let client = new Astoria({ interval: 0.01, unsubscribeOnNotFound: false })
+
+			let spy = sinon.spy((context, data, err) => {
+				if (spy.callCount === 1) {
+					assert.equal(err.message, 'not found')
+				}
+				else if (spy.callCount === 2) {
+					assert.equal(data, 1)
+					unsubscribe()
+					done()
+				}
+			})
+
+			let unsubscribe = client
+				.board('ck')
+				.listen(spy)			
+		})
+
+		it('should not listen if the item becomes not found', (done) => {
+			nextStub.onFirstCall()
+				.resolves(1)
+
+			nextStub.onSecondCall()
+				.resolves(2)
+
+			nextStub.onThirdCall()
+				.rejects(new Error('not found'))
+
+			let client = new Astoria({ interval: 0.01 })
+
+			let spy = sinon.spy((context, data, err) => {
+				// Should never hit 4 calls
+				if (spy.callCount === 4) {
+					done('Got too many calls')
+				}
+				else if (err) {
+					assert.equal(err.message, 'not found')
+					assert.equal(spy.callCount, 3)
+
+					// Wait a bit to ensure no more calls happen after this					
+					setTimeout(() => {
+						assert.equal(spy.callCount, 3)
+						done()
+					}, 50)
+				} 				
+			})
+
+			client
+				.board('ck')
+				.listen(spy)			
+		})
+
+		it('should keep listening if the item becomes not found and option is set to keep listening', (done) => {
+			nextStub.onFirstCall()
+				.resolves(1) 
+
+			nextStub.onSecondCall()
+				.rejects(new Error('not found'))
+
+			nextStub.onThirdCall()
+				.resolves(1)
+
+			let client = new Astoria({ interval: 0.01, unsubscribeOnNotFound: false })
+
+			let spy = sinon.spy((context, data, err) => {
+				if (spy.callCount === 1) {
+					assert.equal(data, 1)
+				}
+				else if (spy.callCount === 2) {
+					assert.equal(err.message, 'not found')
+				}
+				else if (spy.callCount === 3) {
+					assert.equal(data, 1)
+					unsubscribe()
+					done()
+				}
+			})
+
+			let unsubscribe = client
+				.board('ck')
+				.listen(spy)			
+		})
 	})
 })
