@@ -76,4 +76,27 @@ describe('Poller', () => {
 
 		poller.poll()
 	})
+
+	it('should not cancel all pollers if one is cancelled', (done) => {
+		let poller1 = new Poller(0.01)
+		let poller2 = new Poller(0.01)
+
+		let poll2spy = sinon.spy(poller2, 'poll')
+		
+		// Cancel poller1 after 1 call
+		poller1.onPoll(() => {
+			poller1.cancel()
+		})
+
+		poller2.onPoll(() => {
+			// Ensure that our second poller keeps triggering
+			if (poll2spy.callCount >= 2) {
+				poller2.cancel()
+				done()
+			}
+		})
+
+		poller1.poll()
+		poller2.poll()
+	})
 })
