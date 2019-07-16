@@ -3,13 +3,14 @@ let sinon = require('sinon')
 let proxyquire = require('proxyquire')
 
 describe('Board subscriber', () => {
+	let apiStub
 	let fetchStub
 	let subscriber
 
 	beforeEach(() => {
 		// Stub the api
 		fetchStub = sinon.stub()
-		let apiStub = function() {
+		apiStub = function () {
 			this.fetch = fetchStub
 		}
 
@@ -26,6 +27,21 @@ describe('Board subscriber', () => {
 		let subscriber = new BoardSubscriber('ck')
 
 		assert(subscriber._ids && subscriber._ids.length === 0)
+	})
+
+	it('should initialise the Chan api with https if specified', () => {
+		let apiSpy = sinon.spy(class MockApi {
+			constructor() { }
+		})
+
+		// Inject the stub into the subscriber
+		let ProxyBoardSubscriber = proxyquire('../../src/api/board-subscriber', {
+			'./api': apiSpy
+		})
+
+		new ProxyBoardSubscriber('ck', true)
+
+		assert(apiSpy.calledWithExactly(true))
 	})
 
 	it('should call api with specified board', (done) => {

@@ -55,6 +55,26 @@ describe('Astoria client', () => {
 			assert(getSubscriberSpy.notCalled)
 		})
 
+		it('should pass useHttps option into getSubscriber', () => {
+			nextStub.onFirstCall()
+				.resolves(1)
+
+			let client = new Astoria({ useHttps: true })
+
+			let unsubscribe = client
+				.board('ck')
+				.listen(() => { })
+
+			// Ensure we get a function back to unsubscribe from
+			assert(typeof unsubscribe === 'function')
+
+			unsubscribe()
+			
+			// Ensure we've got the right subscriber
+			assert.equal(getSubscriberSpy.callCount, 1)
+			assert(getSubscriberSpy.calledWithExactly('ck', undefined, true))
+		})
+
 		it('should return data on listen, and stop listening when cancelled', (done) => {
 			nextStub.onFirstCall()
 				.resolves(1)
@@ -88,7 +108,7 @@ describe('Astoria client', () => {
 			
 			// Ensure we've got the right subscriber
 			assert.equal(getSubscriberSpy.callCount, 1)
-			assert(getSubscriberSpy.calledWithExactly('ck', undefined))
+			assert(getSubscriberSpy.calledWithExactly('ck', undefined, false))
 		})
 
 		it('should pass an error if the retrieval fails', (done) => {

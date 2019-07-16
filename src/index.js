@@ -15,7 +15,8 @@ class Astoria {
 		let defaultOptions = {
 			interval: 30,
 			updatesOnly: false,
-			unsubscribeOnNotFound: true
+			unsubscribeOnNotFound: true,
+			useHttps: false
 		}
 
 		this.options = {
@@ -64,7 +65,7 @@ class Astoria {
 			throw new Error('A board must be specified')
 		}
 
-		let currentSubscriber = subscriber.getSubscriber(this._board, this._thread)
+		let currentSubscriber = subscriber.getSubscriber(this._board, this._thread, this.options.useHttps)
 		let poller = new Poller(this.options.interval)
 
 		// Little hack if they cancel the listener before actually listening

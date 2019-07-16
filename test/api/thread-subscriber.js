@@ -28,6 +28,21 @@ describe('Thread subscriber', () => {
 		assert(subscriber._ids && subscriber._ids.length === 0)
 	})
 
+	it('should initialise the Chan api with https if specified', () => {
+		let apiSpy = sinon.spy(class MockApi {
+			constructor() { }
+		})
+
+		// Inject the stub into the subscriber
+		let ProxyThreadSubscriber = proxyquire('../../src/api/thread-subscriber', {
+			'./api': apiSpy
+		})
+
+		new ProxyThreadSubscriber('ck', 123, true)
+
+		assert(apiSpy.calledWithExactly(true))
+	})
+
 	it('should call api with specified board and thread', (done) => {
 		fetchStub.returns(Promise.resolve())
 

@@ -1,9 +1,9 @@
 let ChanApi = require('./api')
 
 class BoardSubscriber {
-	constructor(board) {
+	constructor(board, useHttps) {
 		this._board = board
-		this._api = new ChanApi()
+		this._api = new ChanApi(useHttps)
 		this._ids = []
 	}
 

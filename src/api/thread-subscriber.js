@@ -1,10 +1,10 @@
 let ChanApi = require('./api')
 
 class ThreadSubscriber {
-	constructor(board, thread) {
+	constructor(board, thread, useHttps) {
 		this._board = board
 		this._thread = thread
-		this._api = new ChanApi()
+		this._api = new ChanApi(useHttps)
 		this._ids = []
 	}
 
