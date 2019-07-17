@@ -92,8 +92,8 @@ describe('Astoria client', () => {
 						unsubscribe()
 
 						// Check we have the right context
-						assert.equal(context._board, 'ck')
-						assert(!context._thread)
+						assert.equal(context.board, 'ck')
+						assert(!context.thread)
 						done()
 					}
 
@@ -314,6 +314,71 @@ describe('Astoria client', () => {
 			let unsubscribe = client
 				.board('ck')
 				.listen(spy)			
+		})
+
+		it('should return two listeners that behave independently when calling listen twice', (done) => {
+			nextStub.resolves({})
+
+			// Create a spy to monitor board and thread listener
+			let spy1 = sinon.spy()
+			let spy2 = sinon.spy()
+
+			// Create two separate listeners
+			let client = new Astoria({ interval: 0.01 })
+			client.board('ck')
+
+			let unsubscribe1 = client.listen(spy1)
+			let unsubscribe2 = client.listen(spy2)
+
+			// Stop listening straight away to 1
+			unsubscribe1()
+
+			// Wait a few ticks and check that 2 kept on calling
+			setTimeout(() => {
+				unsubscribe2()
+
+				assert(spy1.callCount === 1)
+				assert(spy2.callCount > 1)
+				done()
+			}, 30)
+		})
+
+		it('should not modify original listener if client has properties modified and listen re-called', (done) => {
+			nextStub.resolves({})
+
+			// Create a spy to monitor board and thread listener
+			let boardSpy = sinon.spy((context) => {
+				assert.equal(context.board, 'ck')
+				assert(!context.thread)
+			})
+
+			let threadSpy = sinon.spy((context) => {
+				assert.equal(context.board, 'tv')
+				assert.equal(context.thread, 456)
+			})
+
+			// Create an initial listener
+			let client = new Astoria({ interval: 0.01 })
+			client.board('ck')
+
+			let boardUnsubscribe = client.listen(boardSpy)
+
+			// Modify and relisten
+			client.board('tv')
+				.thread(456)
+
+			let threadUnsubscribe = client.listen(threadSpy)
+
+			// Give it some time to run and run the assertions
+			// Kind of a shitty check but hey whatever works
+			setTimeout(() => {
+				boardUnsubscribe()
+				threadUnsubscribe()
+
+				assert(boardSpy.callCount > 1)
+				assert(threadSpy.callCount > 1)
+				done()
+			}, 50)
 		})
 	})
 })
