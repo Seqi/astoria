@@ -9,6 +9,10 @@ class Astoria {
 	  * @param {AstoriaOptions} options The configuration for Astoria
 	  */
 	constructor(options = {}) {
+		if (typeof options !== 'object') {
+			throw new Error('Options must be an object')
+		}
+
 		let defaultOptions = {
 			interval: 30,
 			updatesOnly: false,

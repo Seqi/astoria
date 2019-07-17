@@ -8,6 +8,14 @@ describe('Astoria client', () => {
 		it('should create instance with no configuration', () => {
 			assert.doesNotThrow(() => new Astoria())
 		})
+
+		it('should create instance with null configuration', () => {
+			assert.doesNotThrow(() => new Astoria(null))
+		})
+
+		it('should error with invalid configuration', () => {
+			assert.throws(() => new Astoria('error'))
+		})
 	
 		it('should create instance with valid configuration', () => {
 			assert.doesNotThrow(() => new Astoria({ interval: 10 }))
