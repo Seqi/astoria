@@ -2,14 +2,11 @@ let Poller = require('./poller')
 let subscriber = require('./api/subscriber')
 
 /**
- * Astoria options
- * @typedef {Object} options
- * @property {number} interval Interval between polling in seconds (min 10 secs). Defaults to 30 seconds.
- */
-
+  * A 4chan board and thread listener.
+  */
 class Astoria {
 	/**
-	  * @param {options} options The configuration for Astoria
+	  * @param {AstoriaOptions} options The configuration for Astoria
 	  */
 	constructor(options = {}) {
 		let defaultOptions = {
@@ -19,6 +16,10 @@ class Astoria {
 			useHttps: false
 		}
 
+		/**
+		 * The current options set being used.
+		 * @type {AstoriaOptions} options
+		 */
 		this.options = {
 			...defaultOptions,
 			...options
@@ -26,7 +27,7 @@ class Astoria {
 	}
 
 	/**
-	 * 
+	 * Sets the target board.
 	 * @param {string} board The 4chan board to target e.g. (v, ck, /biz/, /an/)
 	 * @return {Astoria} Current instance of Astoria
 	 */
@@ -36,8 +37,8 @@ class Astoria {
 	}
 
 	/**
-	 * 
-	 * @param {string} thread The thread number to target (e.g. 1234567)
+	 * Sets the target thread.
+	 * @param {string} thread The thread number to target (e.g. '1234567')
 	 * @return {Astoria} Current instance of Astoria
 	 */
 	thread(thread) {
@@ -46,15 +47,9 @@ class Astoria {
 	}
 
 	/**
-	 * Callback containing Astoria instance with new threads/posts.
-	 * @callback onNewItems
-	 * @param {Astoria} astoria instance of Astoria with new items.
-	 * @param {int} newItems New items since last poll.
-	 */
-
-	/**
 	 * Begin listening to the specified board/thread. 
-	 * @param {onNewItems} callback 
+	 * @param {AstoriaResponse} callback The behaviour to trigger when updates are received.
+	 * @return {function} A function which unsubscribes from the listener when called.
 	 */
 	listen(callback) {
 		// Keep local reference of instance vars to prevent overwrites
@@ -103,7 +98,6 @@ class Astoria {
 							data => callback(ctx, data),
 							err => {
 								if (err.message === 'not found' && ctx.options.unsubscribeOnNotFound) {
-									// Poller won't have polled yet so we can just set the flag
 									poller.cancel()
 								}
 			
@@ -115,12 +109,42 @@ class Astoria {
 				poller.poll()
 			})
 
-		// Give the caller a way of stopping the subscription
+		// Give the user a way to unsubscribe
 		return () => {
 			isCancelled = true
 			poller.cancel()
 		}
 	}
 }
+
+/**
+ * Callback containing new threads/posts.
+ * @callback AstoriaResponse
+ * @param {AstoriaResponseContext} context The context of the listener, including board, thread and options.
+ * @param {Array.<Object>} items New threads/posts since last poll.
+ * @param {Error} err Any error that occurred.
+ */
+
+/**
+ * Astoria options
+ * @typedef {Object} AstoriaOptions
+ * @property {number} [interval] Interval between thread/board polling in **seconds**. Please be 
+ * 		respectful to the server and don't set this below 10 seconds! *Defaults to 30 seconds.*
+ * @property {boolean} [updatesOnly] If set to true, when listening to a board/thread, only new 
+ * 		threads/posts will be sent. Otherwise all current threads/posts will be sent immediately.
+ * 		_Defaults to *false*
+ * @property {boolean} [unsubscribeOnNotFound] Whether to automatically stop listening if/when a
+ * 		board/thread returns 404. *Defaults to true.*
+ * @property {boolean} [useHttps] Connect to the 4chan API using HTTPS. Only use this if you're
+ * 		using this with an application that also uses HTTPS. *Defaults to false.*
+ */
+
+/** 
+  * Astoria response context
+  * @typedef {Object} AstoriaResponseContext
+  * @property {string} board The board currently being listened to.
+  * @property {string} thread The thread currently being listened to if applicable.
+  * @property {AstoriaOptions} options The options applied to the listener.
+  */
 
 module.exports = Astoria

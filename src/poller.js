@@ -1,8 +1,11 @@
 let EventEmitter = require('events').EventEmitter
 
+/**
+ * An extension of the EventEmitter to allow easy polling of a function.
+ */
 class Poller extends EventEmitter {
 	/**
-	 * @param {number} interval Time between polling.
+	 * @param {number} interval Time between polling in seconds.
 	 */
 	constructor(interval) {
 		super()
@@ -17,8 +20,13 @@ class Poller extends EventEmitter {
 	}
 
 	/**
-	 * Provide the callback for 
-	 * @param {The} callback 
+	 * The callback to trigger at each interval.
+	 * @callback PollCallback
+	 */
+
+	/**
+	 * Provide the behaviour that happens each interval.
+	 * @param {PollCallback|Promise.<void>} callback The callback to trigger at each interval.
 	 */
 	onPoll(callback) {
 		this.on('poll', () => {
@@ -27,6 +35,9 @@ class Poller extends EventEmitter {
 		})
 	}
 
+	/**
+	 * Remove all events attached to the poll.
+	 */
 	cancel() {
 		this.removeAllListeners()
 	}
