@@ -36,7 +36,7 @@ class Astoria {
 	 * @return {Astoria} Current instance of Astoria
 	 */
 	board(board) {
-		this._board = board
+		this._board = board.replace(/\//g, '')
 		return this
 	}
 

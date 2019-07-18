@@ -20,6 +20,34 @@ describe('Astoria client', () => {
 		it('should create instance with valid configuration', () => {
 			assert.doesNotThrow(() => new Astoria({ interval: 10 }))
 		})
+
+		it('should not format board if supplied with no slashes', () => {
+			let astoria = new Astoria()
+			astoria.board('ck')
+
+			assert.equal(astoria._board, 'ck')
+		})
+
+		it('should format board if supplied with slashes', () => {
+			let astoria = new Astoria()
+			astoria.board('/ck/')
+
+			assert.equal(astoria._board, 'ck')
+		})
+
+		it('should format board if supplied with leading slashes', () => {
+			let astoria = new Astoria()
+			astoria.board('/ck')
+
+			assert.equal(astoria._board, 'ck')
+		})
+
+		it('should format board if supplied with trailing slashes', () => {
+			let astoria = new Astoria()
+			astoria.board('ck/')
+
+			assert.equal(astoria._board, 'ck')
+		})
 	})
 
 	describe('Listener', () => {
