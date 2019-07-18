@@ -99,7 +99,7 @@ class Astoria {
 				poller.onPoll(() => {
 					return currentSubscriber.next()
 						.then(
-							data => callback(ctx, data),
+							data => data && callback(ctx, data),
 							err => {
 								if (err.message === 'not found' && ctx.options.unsubscribeOnNotFound) {
 									poller.cancel()

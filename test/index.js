@@ -416,5 +416,37 @@ describe('Astoria client', () => {
 				done()
 			}, 50)
 		})
+
+		it('should only call callback if data is present', (done) => {
+			nextStub.onFirstCall()
+				.resolves()
+
+			nextStub.onSecondCall()
+				.resolves()
+				
+			nextStub.onThirdCall()
+				.resolves(1)
+
+			let client = new Astoria({ interval: 0.01, updatesOnly: true })
+
+			let unsubscribe = client
+				.board('ck')
+				.listen((context, data, err) => {
+					if (err) {
+						done(err)
+					}
+
+					unsubscribe()
+
+					if (data === 1) {
+						unsubscribe()						
+						done()
+					}
+
+					else {
+						done(`Retrieved unexpected value ${data}`)
+					}
+				})
+		})
 	})
 })
