@@ -1,6 +1,21 @@
 let Poller = require('./poller')
 let subscriber = require('./api/subscriber')
 
+function areOptionsValid(opts) {
+	if (!opts || typeof opts !== 'object') {
+		return false
+	}
+
+	if ((opts.interval && typeof opts.interval !== 'number') ||
+		(opts.updatesOnly && typeof opts.updatesOnly !== 'boolean') ||
+		(opts.unsubscribeOnNotFound && typeof opts.unsubscribeOnNotFound !== 'boolean') ||
+		(opts.useHttps && typeof opts.useHttps !== 'boolean')) {
+		return false
+	}
+
+	return true
+}
+
 /**
   * A 4chan board and thread listener.
   */
@@ -8,9 +23,9 @@ class Astoria {
 	/**
 	  * @param {AstoriaOptions} options The configuration for Astoria
 	  */
-	constructor(options = {}) {
-		if (typeof options !== 'object') {
-			throw new Error('Options must be an object')
+	constructor(options) {
+		if (options !== null && options !== undefined && !areOptionsValid(options)) {
+			throw new Error('Options are not valid.')
 		}
 
 		let defaultOptions = {
@@ -26,7 +41,7 @@ class Astoria {
 		 */
 		this.options = {
 			...defaultOptions,
-			...options
+			...options || {}
 		}
 	}
 
@@ -56,6 +71,10 @@ class Astoria {
 	 * @return {function} A function which unsubscribes from the listener when called.
 	 */
 	listen(callback) {
+		if (!areOptionsValid(this.options)) {
+			throw new Error('Options are not valid.')
+		}
+
 		// Keep local reference of instance vars to prevent overwrites
 		let ctx = {
 			board: this._board,

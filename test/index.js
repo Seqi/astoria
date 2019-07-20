@@ -74,8 +74,7 @@ describe('Astoria client', () => {
 			Astoria = proxyquire('../src/', {
 				'./api/subscriber': subscriber
 			})
-		})
-	
+		})	
 
 		it('should throw if a function callback isnt supplied', () => {
 			let client = new Astoria({interval: 0.1})
@@ -88,6 +87,33 @@ describe('Astoria client', () => {
 			let client = new Astoria({interval: 0.1})
 
 			assert.throws(() => client.listen(() => {}))
+			assert(getSubscriberSpy.notCalled)
+		})
+
+		it('should throw if options are invalid', () => {
+			let client = new Astoria({interval: 0.1})
+			client.board('ck')
+			client.options = 'oops'
+
+			assert.throws(() => client.listen(() => {}), new Error('Options are not valid.'))
+			assert(getSubscriberSpy.notCalled)
+		})
+
+		it('should throw if options are null', () => {
+			let client = new Astoria({interval: 0.1})
+			client.board('ck')
+			client.options = null
+
+			assert.throws(() => client.listen(() => {}), new Error('Options are not valid.'))
+			assert(getSubscriberSpy.notCalled)
+		})
+
+		it('should throw if options are undefined', () => {
+			let client = new Astoria({interval: 0.1})
+			client.board('ck')
+			client.options = undefined
+
+			assert.throws(() => client.listen(() => {}), new Error('Options are not valid.'))
 			assert(getSubscriberSpy.notCalled)
 		})
 
