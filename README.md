@@ -76,7 +76,7 @@ The following members exist on the Astoria client.
 ### `.options`
 The currently set options on the client. It is generally not recommended to overwrite these, but this property is available if needed.
 
-### `.board(boardName): this`
+### `.board(boardName): Astoria`
 
 Sets the board to listen to. This can be in a format such as `/ck/` or `ck`. A board is required before the listener can begin. 
 
@@ -87,7 +87,7 @@ Returns the current instance to allow method chaining.
 `astoria.board('/tv/')`
 `astoria.board('v')`
 
-### `.thread(threadNumber): this`
+### `.thread(threadNumber): Astoria`
 
 Sets the thread to listen to. This can either be in the format `12345678` or `'12345678'`. Additionally, if you wish to use an existing client which currently has a thread set, you can clear the thread by passing in `null`. 
 
