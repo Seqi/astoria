@@ -1,6 +1,6 @@
 {
   "name": "astoria",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "A 4chan board and thread monitor.",
   "main": "src/index.js",
   "scripts": {
