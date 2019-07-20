@@ -144,9 +144,54 @@ class Astoria {
  * Callback containing new threads/posts.
  * @callback AstoriaResponse
  * @param {AstoriaResponseContext} context The context of the listener, including board, thread and options.
- * @param {Array.<Object>} items New threads/posts since last poll.
+ * @param {Array.<Post>} items New threads/posts since last poll.
  * @param {Error} err Any error that occurred.
  */
+
+/**
+  * A 4chan thread/post object.
+  * @typedef {Object} Post
+  * @property {number} no 			 	Post number          		(1-9999999999999)
+  * @property {number} [resto]          Reply to             		(e.g. 0 (is a thread OP), 1-9999999999999)
+  * @property {number} [sticky]         Stickied thread	    		(e.g. 0 (no), 1 (yes))
+  * @property {number} [closed]         Closed thread       		(e.g. 0 (no), 1 (yes))
+  * @property {number} [archived]       Archived thread     		(e.g. 0 (no), 1 (yes))
+  * @property {number} [archived_on]    Time when archived   		(UNIX timestamp)
+  * @property {string} [now]            Date and time        		(MM\/DD\/YY(Day)HH:MM (:SS on some boards))
+  * @property {number} [time]           UNIX timestamp       		
+  * @property {string} [name]           Name                 		
+  * @property {string} [trip]           Tripcode             		(format: !tripcode!!securetripcode)
+  * @property {string} [id]             ID                   		(text (8 characters), Mod, Admin, Manager, Developer, Founder)
+  * @property {string} [capcode]        Capcode              		(none, mod, admin, admin_highlight, manager, developer, founder)
+  * @property {string} [country]        Country code         		(text (2 characters, ISO 3166-1 alpha-2), XX (unknown))
+  * @property {string} [country_name]   Country name         		
+  * @property {string} [sub]            Subject              		
+  * @property {string} [com]            Comment              		(includes escaped HTML)
+  * @property {number} [tim]            Renamed filename     		(UNIX timestamp + milliseconds)
+  * @property {string} [filename]       Original filename    		
+  * @property {string} [ext]            File extension       		(e.g. .jpg, .png, .gif, .pdf, .swf, .webm)
+  * @property {number} [fsize]          File size            		(0-10485760)
+  * @property {string} [md5]            File MD5             		(24 character, packed base64 MD5 hash)
+  * @property {number} [w]              Image width          		(1-10000)
+  * @property {number} [h]              Image height         		(1-10000)
+  * @property {number} [tn_w]           Thumbnail width      		(1-250)
+  * @property {number} [tn_h]           Thumbnail height     		(1-250)
+  * @property {number} [filedeleted]    File deleted        		(e.g. 0 (no), 1 (yes))
+  * @property {number} [spoiler]        Spoiler image       		(e.g. 0 (no), 1 (yes))
+  * @property {number} [custom_spoiler] Custom spoilers     		(1-99)
+  * @property {number} [omitted_posts]  # replies omitted    		(1-10000)
+  * @property {number} [omitted_images] # image replies omitted		(1-10000)
+  * @property {number} [replies]        # replies total      		(0-99999)
+  * @property {number} [images]         # images total       		(0-99999)
+  * @property {number} [bumplimit]      Bump limit met      		(e.g. 0 (no), 1 (yes))
+  * @property {number} [imagelimit]     Image limit met     		(e.g. 0 (no), 1 (yes))
+  * @property {Array} [capcode_replies] Capcode user replies		(array of capcode type and post IDs)
+  * @property {number} [last_modified]  Time when last modified		(UNIX timestamp)
+  * @property {string} [tag]            Thread tag           		
+  * @property {string} [semantic_url]   Thread URL slug      		
+  * @property {number} [since4pass]     Year 4chan Pass bought 		(4 digit year (YYYY))
+  * @property {Post} [last_replies]		Last 5 replies (thread only)
+  */
 
 /**
  * Astoria options
