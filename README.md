@@ -172,6 +172,10 @@ The exception being when subscribing to threads, each thread will have the follo
 |:----------------|:---------------|:---------------------|:-------------------------------------------|:----------------------|
 | `last_replies`            | `array`      | The latest replies on the thread         | array of post objects (see above)                          | `[ { "no": 3214132, "com": "Im too big for this table" } ]`                |
 
+#### `error`
+
+If an error occurred, this will contain an error object. Errors can include 404, to notify when threads have fallen off the catalog. 
+
 ## Contributing :gift:
 
 This project is open to contributions. Please raise an issue before making a contribution. Additionally, please feel free to raise an issue if you find one. For each addition, please add an appropriate test.
