@@ -1,7 +1,7 @@
 {
   "name": "astoria",
-  "version": "0.0.1",
-  "description": "A 4chan thread and post monitor.",
+  "version": "1.0.0",
+  "description": "A 4chan board and thread monitor.",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
@@ -22,8 +22,11 @@
     "poller",
     "listener"
   ],
-  "author": "",
-  "license": "ISC",
+  "author": {
+    "name": "Seqi",
+    "url": "https://seqi.moe"
+  },
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/seqi/astoria/issues"
   },
