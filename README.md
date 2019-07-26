@@ -1,4 +1,5 @@
 # Astoria
+[![Build Status](https://travis-ci.com/Seqi/astoria.svg?branch=master)](https://travis-ci.com/Seqi/astoria)
 
 Astoria is a Node.js 4chan board and thread monitor, useful for programatically keeping track of threads on a particular board, or posts in a particular thread, perfect for writing custom bots and scripts. Astoria makes use of, and aims to follow the guidelines of the [4chan API](https://github.com/4chan/4chan-API).
 
