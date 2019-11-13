@@ -1,6 +1,6 @@
 {
   "name": "astoria",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "A 4chan board and thread monitor.",
   "main": "src/index.js",
   "scripts": {
@@ -35,7 +35,7 @@
     "node-fetch": "^2.6.0"
   },
   "devDependencies": {
-    "eslint": "^6.0.1",
+    "eslint": "^6.2.1",
     "mocha": "^6.1.4",
     "nock": "^10.0.6",
     "proxyquire": "^2.1.0",
